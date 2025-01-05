@@ -3,15 +3,21 @@ import { useEffect } from "react";
 import { getPosts } from "../ApiHandlers/posts";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import { useProducts } from "../redux/slices/products";
+import { useSelector } from "react-redux";
 
 const Products = () => {
-    const [data, setData] = useState(null);
+    const [data, setData] = useState(null),
+        { setProductsState } = useProducts(),
+        cachedProducts = useSelector(state => { return state.products });
 
     useEffect(() => { getData() }, []);
     const getData = async () => {
+        if (cachedProducts) return setData(cachedProducts);
         const { success, response } = await getPosts();
         if (!success) toast.error("Failed to get the data.");
         setData(response);
+        setProductsState(response);
     };
 
     if (!data) return <>Loading</>;
