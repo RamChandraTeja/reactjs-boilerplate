@@ -1,13 +1,28 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ReactJS Boilerplate</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
+import { useState } from "react";
+import { fetchStockData, predictStockPrice } from "./api";
+
+const StockForm = ({ onStockData, onPrediction }) => {
+  const [ticker, setTicker] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const stockData = await fetchStockData(ticker);
+    const prediction = await predictStockPrice(ticker);
+    onStockData(stockData);
+    onPrediction(prediction);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input
+        type="text"
+        value={ticker}
+        onChange={(e) => setTicker(e.target.value)}
+        placeholder="Enter stock ticker (AAPL, TSLA, etc.)"
+      />
+      <button type="submit">Get Data</button>
+    </form>
+  );
+};
+
+export default StockForm;
