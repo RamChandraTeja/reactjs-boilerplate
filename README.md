@@ -1,4 +1,4 @@
-# ReactJS Boilerplate
+# ReactJS App
 
 - ## Routing
 - - Static
